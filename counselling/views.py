@@ -5,8 +5,8 @@ from rest_framework import generics, permissions,status
 from knox.models import AuthToken
 
 
-from counselling.models import Client, Counsellor
-from .serializers import ClientSerializer, RegisterClientSerializer, CounsellorSerializer, RegisterCounsellorSerializer, ChangePasswordSerializer, ChangeCounsellorPasswordSerializer
+from counselling.models import Client, Counsellor, Article
+from .serializers import ArticleSerializer, ClientSerializer, RegisterClientSerializer, CounsellorSerializer, RegisterCounsellorSerializer, ChangePasswordSerializer, ChangeCounsellorPasswordSerializer, ArticleSerializer, UploadArticleSerializer
 from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
@@ -146,6 +146,36 @@ def routes(request):
           'token':'',
           'password':''
         }
+        },
+        {
+        'path':'articles/',
+        'method':'GET',
+        'description':'get a list of all article details ',
+        'response':'all articles'
+        },
+        {
+        'path':'articles/upload/',
+        'method':'POST',
+        'description':'Upload an article',
+        'response':'returns the uploaded article'
+        },
+        {
+        'path':'articles/<int:id>/',
+        'method':'GET',
+        'description':'GET details of a particular article',
+        'response':'article details'
+        },
+        {
+        'path':'articles/update/<int:id>/',
+        'method':'PUT',
+        'description':'update details of an article',
+        'response':'updated article'
+        },
+        {
+        'path':'articles/delete/<int:id>/',
+        'method':'DELETE',
+        'description':'delete article',
+        'response':'article deleted'
         },
     ]
     return Response(routes)
@@ -300,3 +330,57 @@ class ChangeCounsellorPassword(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#article management
+#get all article
+@api_view(['GET'])
+def getArticles(request):
+  articles = Article.objects.all()
+  serializer = ArticleSerializer(articles, many=True)
+  return Response(serializer.data)
+
+#article detail
+
+@api_view(['GET'])
+def getArticleDetails(request, id):
+  article = Article.objects.get(id=id)
+  serializer = ArticleSerializer(article, many=False)
+  return Response(serializer.data)
+
+
+
+#Upload article
+class UploadArticle(generics.GenericAPIView):
+    serializer_class = UploadArticleSerializer
+
+    def post(self, request,*args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        article = serializer.save()
+        return Response({
+            'article':ArticleSerializer(article, context=self.get_serializer_context()).data
+            
+        })
+
+
+
+
+#update an article
+@api_view(['PUT'])
+def updateArticle(request, id):
+  data = request.data
+  article = Article.objects.get(id=id)
+  serializer = ArticleSerializer(instance=article, data=request.data)
+  if serializer.is_valid():
+    serializer.save()
+
+  return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteArticle(request, id):
+  article = Article.objects.get(id=id)
+  article.delete()
+  return Response('Article deleted')
+
+
+

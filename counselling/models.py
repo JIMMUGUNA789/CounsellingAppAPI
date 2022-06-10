@@ -1,3 +1,4 @@
+from sre_parse import CATEGORIES
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
@@ -14,6 +15,30 @@ class Client(User):
     phone_number = models.IntegerField()
     profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
     counsellor_assigned = models.ForeignKey('Counsellor', on_delete=models.SET_NULL, null=True)
+
+category_choices = (
+    ("Anxiety", "Anxiety"),
+    ("Troumatic Experience", "Troumatic Experience"),
+    ("Relationship", "Relationship"),
+    ("School or Work Stress", "School or Work Stress"),
+    ("Depression", "Depression"),
+    ("Addiction", "Addiction"),
+    ("Other", "Other"),
+) 
+
+class Article(models.Model):
+    author = models.ForeignKey('Counsellor', on_delete=models.CASCADE)
+    date_published = models.DateTimeField(auto_now_add=True)
+    title = models.TextField(max_length=255)
+    approved = models.BooleanField(default=False)
+    article_image = models.ImageField(null=True, blank=True, upload_to='images')
+    categories = models.CharField(max_length=255, choices=category_choices, default="Other")
+    article = models.FileField(upload_to='articles')
+
+    class Meta:
+        ordering = ['-date_published']
+
+
 
 
 

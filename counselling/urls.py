@@ -23,4 +23,10 @@ urlpatterns=[
     path('client/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('counsellor/changePassword/', views.ChangeCounsellorPassword.as_view(),name='changeCounsellorPassword'),
 
+    path('articles/', views.getArticles, name='getArticles'),
+    path('articles/<int:id>/', views.getArticleDetails, name='getArticleDetails'),
+    path('articles/upload/', views.UploadArticle.as_view(), name='uploadArticle'),
+    path('articles/update/<int:id>/', views.updateArticle, name='updateArticle'),
+    path('articles/delete/<int:id>/', views.deleteArticle, name='deleteArticle'),
+
 ]

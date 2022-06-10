@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Counsellor
+from .models import Client, Counsellor, Article
 
 #Client Serializer
 class ClientSerializer(serializers.ModelSerializer):
@@ -55,4 +55,25 @@ class ChangeCounsellorPasswordSerializer(serializers.Serializer):
     model = Counsellor
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = '__all__'  
+
+class UploadArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('id', 'author', 'title', 'article_image', 'categories', 'article')    
+
+    
+    def create(self, validated_data):
+         article = Article.objects.create(
+         author=validated_data['author'],
+         title=validated_data['title'], 
+         article_image=validated_data['article_image'], 
+         categories=validated_data['categories'],
+         article=validated_data['article'])
+         return article
     
