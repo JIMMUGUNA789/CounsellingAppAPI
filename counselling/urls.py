@@ -16,6 +16,10 @@ urlpatterns=[
     path('clients/', views.getClients, name='getClients'),
     path('clients/detail/<int:id>/', views.getClientDetail, name='getClientDetail'),
     path('clients/delete/<int:id>/', views.deleteClient, name='deleteClient'),
+
+    path('clients/registerissue/', views.RegisterClientIssue.as_view(), name='registerClientIssue'),
+
+
     path('counsellors/', views.getCounsellors, name='getCounsellors'),
     path('counsellors/detail/<int:id>/', views.getCounsellorDetail, name='getCounsellorDetail'),
     path('counsellors/delete/<int:id>/', views.deleteCounsellor, name='deleteCounsellor'),
@@ -28,5 +32,6 @@ urlpatterns=[
     path('articles/upload/', views.UploadArticle.as_view(), name='uploadArticle'),
     path('articles/update/<int:id>/', views.updateArticle, name='updateArticle'),
     path('articles/delete/<int:id>/', views.deleteArticle, name='deleteArticle'),
+    path('articles/approve/<int:id>/', views.approveArticle, name='articleApproved'),
 
 ]

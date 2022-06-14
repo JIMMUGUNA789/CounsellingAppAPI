@@ -15,6 +15,19 @@ class Client(User):
     phone_number = models.IntegerField()
     profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
     counsellor_assigned = models.ForeignKey('Counsellor', on_delete=models.SET_NULL, null=True)
+    
+
+class Issue(models.Model):
+    anxiety = models.BooleanField(default=False)
+    troumatic_experience = models.BooleanField(default=False)
+    relationship = models.BooleanField(default=False)
+    stress = models.BooleanField(default=False)
+    depression = models.BooleanField(default=False)
+    addiction = models.BooleanField(default=False)
+    other = models.BooleanField(default=False)
+    client = models.ForeignKey('Client', on_delete=models.CASCADE)
+
+    
 
 category_choices = (
     ("Anxiety", "Anxiety"),

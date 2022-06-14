@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Counsellor, Article
+from .models import Client, Counsellor, Article, Issue
 
 #Client Serializer
 class ClientSerializer(serializers.ModelSerializer):
@@ -44,6 +44,30 @@ class RegisterCounsellorSerializer(serializers.ModelSerializer):
          profile_pic=validated_data['profile_pic'])
          return counsellor
 
+class IssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue
+        fields = '__all__'
+
+class RegisterIssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue
+        fields = '__all__'   
+
+    
+    def create(self, validated_data):
+         issue = Issue.objects.create(
+             anxiety = validated_data['anxiety'],
+             troumatic_experience = validated_data['troumatic_experience'],
+             relationship = validated_data['relationship'],
+             stress = validated_data['stress'],
+             depression = validated_data['depression'],
+             addiction = validated_data['addiction'],
+             other = validated_data['other'],
+             client = validated_data['client']
+                
+         )
+         return issue
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = Client

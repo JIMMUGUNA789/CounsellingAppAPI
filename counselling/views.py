@@ -5,8 +5,9 @@ from rest_framework import generics, permissions,status
 from knox.models import AuthToken
 
 
-from counselling.models import Client, Counsellor, Article
-from .serializers import ArticleSerializer, ClientSerializer, RegisterClientSerializer, CounsellorSerializer, RegisterCounsellorSerializer, ChangePasswordSerializer, ChangeCounsellorPasswordSerializer, ArticleSerializer, UploadArticleSerializer
+from counselling.models import Client, Counsellor, Article,Issue
+from .serializers import ArticleSerializer, ClientSerializer, RegisterClientSerializer, CounsellorSerializer, RegisterCounsellorSerializer, ChangePasswordSerializer, ChangeCounsellorPasswordSerializer, ArticleSerializer, RegisterIssueSerializer, UploadArticleSerializer
+from .serializers import IssueSerializer
 from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
@@ -177,6 +178,14 @@ def routes(request):
         'description':'delete article',
         'response':'article deleted'
         },
+         {
+        'path':'articles/approve/<int:id>/',
+        'method':'PUT',
+        'description':'approve an article. Only an admin should be able to do this',
+        'response':'approved article'
+        },
+        
+
     ]
     return Response(routes)
 #client registration
@@ -191,6 +200,24 @@ class RegisterClient(generics.GenericAPIView):
             'client':ClientSerializer(client, context=self.get_serializer_context()).data,
             'token':AuthToken.objects.create(client)[1]
         })
+
+
+#Register client issues
+
+class RegisterClientIssue(generics.GenericAPIView):
+    serializer_class = RegisterIssueSerializer
+
+    def post(self, request,*args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        issue = serializer.save()
+        return Response({
+            'issue':IssueSerializer(issue, context=self.get_serializer_context()).data
+            
+        })
+
+  
+
 
 #client login
 class ClientLogin(KnoxLoginView):
@@ -381,6 +408,19 @@ def deleteArticle(request, id):
   article = Article.objects.get(id=id)
   article.delete()
   return Response('Article deleted')
+
+#Approve articles
+@api_view(['PUT'])
+def approveArticle(request, id):
+  article = Article.objects.get(id=id)
+  article.approved = True
+  approved_article = article.save()
+  serializer = ArticleSerializer(article, many=False)
+  return Response({
+    'approved_article':serializer.data
+  })
+
+
 
 
 
