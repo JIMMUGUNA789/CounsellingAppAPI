@@ -34,4 +34,6 @@ urlpatterns=[
     path('articles/delete/<int:id>/', views.deleteArticle, name='deleteArticle'),
     path('articles/approve/<int:id>/', views.approveArticle, name='articleApproved'),
 
+    path('dashboard/admin/', views.admin, name='adminDashboard'),
+
 ]

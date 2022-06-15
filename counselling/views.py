@@ -1,4 +1,4 @@
-from pydoc import cli
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics, permissions,status
@@ -13,7 +13,14 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from rest_framework.permissions import IsAuthenticated
 
+
 # Create your views here.
+
+#admin dashboard
+
+def admin(request):
+  return render(request, 'admin/index.html')
+
 @api_view(['GET'])
 def routes(request):
     routes=[
@@ -420,6 +427,9 @@ def approveArticle(request, id):
     'approved_article':serializer.data
   })
 
+
+
+  
 
 
 
