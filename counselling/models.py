@@ -10,11 +10,16 @@ class Counsellor(User):
     phone_number = models.IntegerField()
     profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
 
+    class Meta:
+        verbose_name_plural = 'Counsellors'
+
     
 class Client(User):
     phone_number = models.IntegerField()
     profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
     counsellor_assigned = models.ForeignKey('Counsellor', on_delete=models.SET_NULL, null=True)
+    class Meta:
+        verbose_name_plural = 'Clients'
     
 
 class Issue(models.Model):
@@ -26,6 +31,10 @@ class Issue(models.Model):
     addiction = models.BooleanField(default=False)
     other = models.BooleanField(default=False)
     client = models.ForeignKey('Client', on_delete=models.CASCADE)
+    # def __str__(self):
+    #     return self.client.
+    class Meta:
+        verbose_name_plural = 'Issues'
 
     
 
@@ -50,6 +59,7 @@ class Article(models.Model):
 
     class Meta:
         ordering = ['-date_published']
+        verbose_name_plural = 'Articles'
 
 
 

@@ -16,10 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
-#admin dashboard
 
-def admin(request):
-  return render(request, 'admin/index.html')
 
 @api_view(['GET'])
 def routes(request):
@@ -191,6 +188,19 @@ def routes(request):
         'description':'approve an article. Only an admin should be able to do this',
         'response':'approved article'
         },
+         {
+        'path':'clients/registerissue/',
+        'method':'POST',
+        'description':'Register client issues',
+        'response':'consult at this point'
+        },
+         {
+        'path':'admin/',
+        'method':'GET',
+        'description':'Login in to admin Panel',
+        'response':'logs you in to admin panel'
+        },
+
         
 
     ]

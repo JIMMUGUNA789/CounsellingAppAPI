@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -145,3 +146,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 django_heroku.settings(locals())
+
+
+JAZZMIN_SETTINGS = {
+    
+    "welcome_sign": "Welcome to the library",    
+    "copyright": "Eger Counsel",     
+    "hide_apps": ['knox',
+    'django_rest_passwordreset',],
+    
+}
+JAZZMIN_SETTINGS["show_ui_builder"] = True
+
