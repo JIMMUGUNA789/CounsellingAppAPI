@@ -5,9 +5,9 @@ from rest_framework import generics, permissions,status
 from knox.models import AuthToken
 
 
-from counselling.models import Client, Counsellor, Article,Issue
+from counselling.models import Client, Counsellor, Article,Issue, Appointment
 from .serializers import ArticleSerializer, ClientSerializer, RegisterClientSerializer, CounsellorSerializer, RegisterCounsellorSerializer, ChangePasswordSerializer, ChangeCounsellorPasswordSerializer, ArticleSerializer, RegisterIssueSerializer, UploadArticleSerializer
-from .serializers import IssueSerializer
+from .serializers import IssueSerializer, CreateappointmentSerializer, AppointmentSerializer
 from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
@@ -199,6 +199,49 @@ def routes(request):
         'method':'GET',
         'description':'Login in to admin Panel',
         'response':'logs you in to admin panel'
+        },
+        {
+        'path':'book-appointment/',
+        'method':'POST',
+        'description':'book an appointment',
+        'response':'returns booked appointment',
+        'data':'client, counsellor, date, time,'
+        },
+        {
+        'path':'appointments/',
+        'method':'GET',
+        'description':'get all apartments as objects',
+        'response':''
+        },
+         {
+        'path':'appointments/id',
+        'method':'GET',
+        'description':'get appointment details',
+        'response':''
+        },
+         {
+        'path':'appointments/id',
+        'method':'GET',
+        'description':'get appointment details',
+        'response':''
+        },
+         {
+        'path':'appointments/delete/id',
+        'method':'DELETE',
+        'description':'deletes an appointment',
+        'response':''
+        },
+         {
+        'path':'appointments/counsellor/counsellor-id',
+        'method':'GET',
+        'description':'filter apointments by counsellor',
+        'response':'returns all appointments of the specified counsellor'
+        },
+         {
+        'path':'appointments/client/client-id',
+        'method':'GET',
+        'description':'filter appointments by client',
+        'response':'returns all appointments booked by the specified client'
         },
 
         
@@ -436,6 +479,61 @@ def approveArticle(request, id):
   return Response({
     'approved_article':serializer.data
   })
+
+# book an appointment
+class BookAppointment(generics.GenericAPIView):
+    serializer_class = CreateappointmentSerializer
+
+    def post(self, request,*args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        appointment = serializer.save()
+        return Response({
+            'appointment':AppointmentSerializer(appointment, context=self.get_serializer_context()).data
+            
+        })
+@api_view(['POST'])
+def bookAppointment(request, clientId):
+  client = Client.objects.get(id=clientId)
+
+  appointment = Appointment.objects.create(
+         client=client,
+         counsellor=request.data['counsellor'], 
+         date=request.data['date'], 
+         time=request.data['time'],)
+  serializer = AppointmentSerializer(appointment, many=False)
+  return Response(serializer.data)
+         
+@api_view(['GET'])
+def getAppointments(request):
+  appointments = Appointment.objects.all()
+  serializer = AppointmentSerializer(appointments, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def appointmentDetail(request, id):
+  appointment = Appointment.objects.get(id=id)
+  serializer = AppointmentSerializer(appointment)
+  return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteAppointment(request, id):
+  appointment = Appointment.objects.get(id=id)
+  appointment.delete()
+  return Response("appointment deleted successfully")
+
+@api_view(['GET'])
+def counsellorAppointment(request,id):
+  appointments = Appointment.objects.filter(counsellor = id)
+  serializer = AppointmentSerializer(appointments, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def clientAppointment(request, id):
+  appointments = Appointment.objects.filter(client=id)
+  serializer = AppointmentSerializer(appointments, many=True)
+  return Response(serializer.data)
+
 
 
 

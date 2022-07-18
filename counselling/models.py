@@ -10,6 +10,8 @@ class Counsellor(User):
     phone_number = models.IntegerField()
     profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
 
+    
+
     class Meta:
         verbose_name_plural = 'Counsellors'
 
@@ -61,6 +63,30 @@ class Article(models.Model):
         ordering = ['-date_published']
         verbose_name_plural = 'Articles'
 
+time_choices = (
+    ("8-9am", "8-9am"),
+    ("9-10am", "9-10am"),
+    ("10-11am", "10-11am"),
+    ("11-12pm", "11-12pm"),
+    ("12-1pm", "12-1pm"),
+    ("1-2pm", "1-2pm"),
+    ("2-3pm", "2-3pm"),
+    ("3-4pm", "3-4pm"),
+    ("4-5pm", "4-5pm"),
+) 
+
+class Appointment(models.Model):
+    client = models.ForeignKey('Client', on_delete=models.CASCADE)
+    counsellor = models.ForeignKey('Counsellor', on_delete=models.SET_NULL,null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    time = models.CharField(max_length=255, choices=time_choices, default="8-9am" )
+    expired = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.client
+    
+    class Meta:
+        ordering = ['-date']
 
 
 

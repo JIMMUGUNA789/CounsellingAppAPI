@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Counsellor, Article, Issue
+from .models import Client, Counsellor, Article, Issue, Appointment
 
 #Client Serializer
 class ClientSerializer(serializers.ModelSerializer):
@@ -100,4 +100,23 @@ class UploadArticleSerializer(serializers.ModelSerializer):
          categories=validated_data['categories'],
          article=validated_data['article'])
          return article
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = '__all__'  
+
+class CreateappointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = ('id', 'client', 'counsellor', 'date', 'time')    
+
+    
+    def create(self, validated_data):
+         appointment = Appointment.objects.create(
+         client=validated_data['client'],
+         counsellor=validated_data['counsellor'], 
+         date=validated_data['date'], 
+         time=validated_data['time'],)
+         
+         return appointment
     

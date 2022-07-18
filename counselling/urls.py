@@ -34,6 +34,14 @@ urlpatterns=[
     path('articles/delete/<int:id>/', views.deleteArticle, name='deleteArticle'),
     path('articles/approve/<int:id>/', views.approveArticle, name='articleApproved'),
 
+    path('book-appointment/', views.BookAppointment.as_view(), name='book-appointment'),
+    # path('bookappointment/<int:clientId>/', views.bookAppointment, name='bookappointment'),
+    path('appointments/', views.getAppointments, name='getAppointments'),
+    path('appointments/<int:id>/', views.appointmentDetail, name='appointmentDetail'),
+    path('appointments/delete/<int:id>/', views.deleteAppointment, name='deleteAppointment'),
+    path('appointments/counsellor/<int:id>/', views.counsellorAppointment, name='counsellorAppointment'),
+    path('appointments/client/<int:id>/', views.clientAppointment, name='clientAppointments'),
+
     
 
 ]
