@@ -1,7 +1,9 @@
-from decimal import Clamped
+
 from django.contrib import admin
 from .models import Client, Counsellor, Article, Issue, Appointment
 from django.contrib.auth.models import Group
+
+
 
 # Register your models here.
 admin.site.site_header = 'Eger Counsel Admin'
@@ -38,9 +40,13 @@ class AppointmentAdmin(admin.ModelAdmin):
 class ImportAdmin(admin.ModelAdmin):
     change_list_template = 'admin/counselling/client/change_list.html'
 
+
+
+
 admin.site.register(Client, ClientAdmin)
+
 admin.site.register(Counsellor, CounsellorAdmin)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Issue)
-admin.site.register(Appointment, AppointmentAdmin)
+# admin.site.register(Appointment, AppointmentAdmin)
 admin.site.unregister(Group)
